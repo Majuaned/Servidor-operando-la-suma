@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso de servidor</title>
+</head>
+
+<body>
+    <form action="" id="formulario">
+        <input type="number" id="num1" placeholder="Ingrese un número">
+        <input type="number" id="num2" placeholder="Ingrese otro número">
+        <button type="submit">Sumar los números</button>
+    </form>
+
+    <script>
+        let formulario = document.getElementById('formulario');
+        //se escucha al formulario trayendolo por getelement y se lo guarda en la variable formulario, se escucha al mismo con addevenlistener y se escucha el evento submit. Se asincroniza y se agrega preventdefault para evitar el reinicio.
+        formulario.addEventListener('submit',async e =>{
+            e.preventDefault();
+            //se espera la respuesta de la escucha y se desestructura texto y resultado q vienen de la respuesta de la ejecución de la función sumarFetch()
+            let {texto,resultado} =await sumarFetch();
+            alert(`${texto} y es: ${resultado}`)
+        })
+
+        const sumarFetch = async (e) => {
+            let n1 = parseInt(document.getElementById("num1").value);
+            let n2 = parseInt(document.getElementById("num2").value);
+
+            let responseSuma = await fetch("http://localhost:3000/suma", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "num1": n1,
+                    "num2": n2
+                })
+            })
+            let resj = await responseSuma.json()
+            return resj
+        }
+    </script>
+</body>
+</html>
